@@ -1,4 +1,4 @@
-name: NestJS CI
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Use Node.js 18
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -22,7 +22,14 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm run test
+        run: npm test
 
-      - name: Build project
+      - name: Build app
         run: npm run build
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: your-heroku-app-name
+          heroku_email: your-email@example.com
