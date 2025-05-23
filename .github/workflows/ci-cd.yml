@@ -1,4 +1,4 @@
-name: Deploy NestJS to Heroku
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,26 +6,29 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Use Node.js
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install dependencies with Yarn
-        run: yarn install --frozen-lockfile
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Build the app
-        run: yarn build
+      - name: Run tests
+        run: npm test
+
+      - name: Build app
+        run: npm run build
 
       - name: Deploy to Heroku
-        uses: amondnet/heroku-deploy@v3.12.13
+        uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: learn-nest
