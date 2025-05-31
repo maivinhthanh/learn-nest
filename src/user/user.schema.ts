@@ -8,11 +8,17 @@ export class User {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true })
-  password: string;
+  @Prop()
+  password?: string;  // Có thể không có nếu user đăng nhập Google
 
   @Prop()
-  refreshToken: string;
+  displayName?: string;
+
+  @Prop()
+  googleId?: string;
+
+  @Prop({ type: [String], default: [] })
+  refreshTokens: string[];
 
   // Optional: You can define _id if you want to make it explicit
   _id?: Types.ObjectId;
